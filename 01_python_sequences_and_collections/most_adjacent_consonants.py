@@ -40,15 +40,18 @@ def is_consonant(char: str):
     return char.isalpha() and char not in {'a', 'e', 'i', 'o', 'u'}
 
 def count_adjacent_consonants(string: str):
-    adjacents = 0
     max_adjacents = 0
-    for idx, char in enumerate(string.replace(' ', '')):
+    adjacent_consonents = ''
+    for char in string.replace(' ', ''):
         if is_consonant(char):
-            if idx > 0 and is_consonant(string[idx - 1]):
-                adjacents = max(2, adjacents + 1)
+            adjacent_consonents += char
         else:
-            max_adjacents = max(adjacents, max_adjacents)
-            adjacents = 0
+            length = len(adjacent_consonents)
+            if length < 2:
+                length = 0
+            max_adjacents = max(max_adjacents, length)
+            adjacent_consonents = ''
+    max_adjacents = max(max_adjacents, len(adjacent_consonents))
     return max_adjacents
 
 def sort_by_consonant_count(lst: list):
