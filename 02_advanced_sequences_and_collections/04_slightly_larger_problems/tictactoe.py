@@ -4,6 +4,17 @@ INITIAL_MARKER = " "
 HUMAN_MARKER = "X"
 COMPUTER_MARKER = "O"
 
+def join_or(lst, delimiter=', ', conjunction='or'):
+    match len(lst):
+        case 0:
+            return ""
+        case 1:
+            return lst[0]
+        case 2:
+            return f'{lst[0]} {conjunction} {lst[1]}'
+    beginning = delimiter.join(str(el) for el in lst[0:-1])
+    return f'{beginning}{delimiter}{conjunction} {lst[-1]}'
+
 def display_board(board):
     os.system('clear')
     prompt(f"You are {HUMAN_MARKER}. Computer is {COMPUTER_MARKER}.")
@@ -37,7 +48,7 @@ def empty_squares(board):
 def player_chooses_square(board):
     while True:
         valid_choices = [str(num) for num in empty_squares(board)]
-        prompt(f"Choose a square ({', '.join(valid_choices)}):")
+        prompt(f"Choose a square ({join_or(valid_choices)}):")
         square = input().strip()
         if square in valid_choices:
             break  # break if it's a valid square
