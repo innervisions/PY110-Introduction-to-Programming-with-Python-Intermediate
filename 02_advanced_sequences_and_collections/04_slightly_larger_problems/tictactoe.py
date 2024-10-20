@@ -4,6 +4,16 @@ INITIAL_MARKER = " "
 HUMAN_MARKER = "X"
 COMPUTER_MARKER = "O"
 MATCH_WIN_ROUNDS = 5
+WINNING_LINES = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],  # rows
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],  # columns
+    [1, 5, 9],
+    [3, 5, 7],  # diagonals
+]
 
 def join_or(lst, delimiter=', ', conjunction='or'):
     match len(lst):
@@ -64,7 +74,6 @@ def prompt(message):
 def empty_squares(board):
     return [key for key, value in board.items() if value == INITIAL_MARKER]
 
-
 def player_chooses_square(board):
     while True:
         valid_choices = [str(num) for num in empty_squares(board)]
@@ -76,11 +85,29 @@ def player_chooses_square(board):
 
     board[int(square)] = HUMAN_MARKER
 
+def get_at_risk_square(line, board):
+    markers_in_line = [board[square] for square in line]
+
+    if markers_in_line.count("X") == 2:
+        for square in line:
+            if board[square] == " ":
+                return square
+    return None
+
 
 def computer_chooses_square(board):
     if len(empty_squares(board)) == 0:
         return
-    square = random.choice(empty_squares(board))
+
+    square = None
+    for line in WINNING_LINES:
+        square = get_at_risk_square(line, board)
+        if square:
+            break
+
+    if not square:
+        square = random.choice(empty_squares(board))
+
     board[square] = COMPUTER_MARKER
 
 
@@ -89,18 +116,7 @@ def board_full(board):
 
 
 def detect_winner(board):
-    winning_lines = [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],  # rows
-        [1, 4, 7],
-        [2, 5, 8],
-        [3, 6, 9],  # columns
-        [1, 5, 9],
-        [3, 5, 7],  # diagonals
-    ]
-
-    for line in winning_lines:
+    for line in WINNING_LINES:
         sq1, sq2, sq3 = line
         if (
             board[sq1] == HUMAN_MARKER
@@ -125,7 +141,7 @@ def get_match_winner(scores):
     for name, score in scores.items():
         if score >= MATCH_WIN_ROUNDS:
             return name
-    return
+    return None
 
 
 def play_game(scores):
