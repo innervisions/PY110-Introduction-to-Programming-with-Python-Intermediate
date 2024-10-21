@@ -188,10 +188,13 @@ def play_match():
 def play_tictactoe():
     while True:
         play_match()
-        prompt("Play again? (y or n)")
-        answer = input().lower()
-
-        if answer[0] != "y":
+        while True:
+            prompt("Play again? (y or n)")
+            answer = input().lower()
+            if answer in ['y', 'n']:
+                break
+            prompt('Please choose y or n.')
+        if answer == 'n':
             break
     prompt("Thanks for playing Tic Tac Toe!")
 
