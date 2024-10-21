@@ -110,6 +110,9 @@ def computer_chooses_square(board):
             if square:
                 break
     if not square:
+        if board[5] == INITIAL_MARKER:
+            square = 5
+    if not square:
         square = random.choice(empty_squares(board))
 
     board[square] = COMPUTER_MARKER
